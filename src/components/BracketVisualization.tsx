@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import type { SingleEliminationBracket, DoubleEliminationBracket, Match, Player } from '../types/tournament';
-import { RoundComponent } from './MatchComponent';
+import { MatchComponent } from './MatchComponent';
 
 interface BracketVisualizationProps {
   tournament: SingleEliminationBracket | DoubleEliminationBracket;
@@ -87,9 +87,9 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
             line.setAttribute('y1', fromY.toString());
             line.setAttribute('x2', toX.toString());
             line.setAttribute('y2', toY.toString());
-            line.setAttribute('stroke', '#666');
+            line.setAttribute('stroke', '#333');
             line.setAttribute('stroke-width', '2');
-            line.setAttribute('opacity', matches[0].winner ? '1' : '0.4');
+            line.setAttribute('opacity', matches[0].winner ? '1' : '0.6');
             
             svg.appendChild(line);
           }
@@ -108,7 +108,7 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
             const from2Y = match2Rect.top + match2Rect.height / 2 - containerRect.top;
             
             // Calculate bracket connection points
-            const midX = from1X + (toX - from1X) * 0.5;
+            const midX = from1X + (toX - from1X) * 0.6;
             
             // Create traditional bracket lines
             // Horizontal lines from matches
@@ -117,43 +117,43 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
             line1.setAttribute('y1', from1Y.toString());
             line1.setAttribute('x2', midX.toString());
             line1.setAttribute('y2', from1Y.toString());
-            line1.setAttribute('stroke', '#666');
+            line1.setAttribute('stroke', '#333');
             line1.setAttribute('stroke-width', '2');
-            line1.setAttribute('opacity', matches[0].winner ? '1' : '0.4');
+            line1.setAttribute('opacity', matches[0].winner ? '1' : '0.6');
             
             const line2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             line2.setAttribute('x1', from2X.toString());
             line2.setAttribute('y1', from2Y.toString());
             line2.setAttribute('x2', midX.toString());
             line2.setAttribute('y2', from2Y.toString());
-            line2.setAttribute('stroke', '#666');
+            line2.setAttribute('stroke', '#333');
             line2.setAttribute('stroke-width', '2');
-            line2.setAttribute('opacity', matches[1].winner ? '1' : '0.4');
+            line2.setAttribute('opacity', matches[1].winner ? '1' : '0.6');
             
             // Vertical connecting line
-            const line3 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line3.setAttribute('x1', midX.toString());
-            line3.setAttribute('y1', Math.min(from1Y, from2Y).toString());
-            line3.setAttribute('x2', midX.toString());
-            line3.setAttribute('y2', Math.max(from1Y, from2Y).toString());
-            line3.setAttribute('stroke', '#666');
-            line3.setAttribute('stroke-width', '2');
-            line3.setAttribute('opacity', (matches[0].winner || matches[1].winner) ? '1' : '0.4');
+            const verticalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            verticalLine.setAttribute('x1', midX.toString());
+            verticalLine.setAttribute('y1', from1Y.toString());
+            verticalLine.setAttribute('x2', midX.toString());
+            verticalLine.setAttribute('y2', from2Y.toString());
+            verticalLine.setAttribute('stroke', '#333');
+            verticalLine.setAttribute('stroke-width', '2');
+            verticalLine.setAttribute('opacity', '1');
             
-            // Line to next match
-            const line4 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line4.setAttribute('x1', midX.toString());
-            line4.setAttribute('y1', toY.toString());
-            line4.setAttribute('x2', toX.toString());
-            line4.setAttribute('y2', toY.toString());
-            line4.setAttribute('stroke', '#666');
-            line4.setAttribute('stroke-width', '2');
-            line4.setAttribute('opacity', (matches[0].winner || matches[1].winner) ? '1' : '0.4');
+            // Final line to next match
+            const finalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            finalLine.setAttribute('x1', midX.toString());
+            finalLine.setAttribute('y1', ((from1Y + from2Y) / 2).toString());
+            finalLine.setAttribute('x2', toX.toString());
+            finalLine.setAttribute('y2', toY.toString());
+            finalLine.setAttribute('stroke', '#333');
+            finalLine.setAttribute('stroke-width', '2');
+            finalLine.setAttribute('opacity', '1');
             
             svg.appendChild(line1);
             svg.appendChild(line2);
-            svg.appendChild(line3);
-            svg.appendChild(line4);
+            svg.appendChild(verticalLine);
+            svg.appendChild(finalLine);
           }
         }
       });
@@ -161,86 +161,131 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
   };
 
   const drawDoubleEliminationLines = (
-    bracket: DoubleEliminationBracket, 
-    svg: SVGSVGElement, 
+    bracket: DoubleEliminationBracket,
+    svg: SVGSVGElement,
     container: HTMLElement
   ) => {
     // Similar logic for double elimination, but more complex
     // For now, we'll implement basic winner bracket connections
     drawSingleEliminationLines(
-      { type: 'single-elimination', rounds: bracket.winnerRounds, players: bracket.players }, 
-      svg, 
+      { ...bracket, type: 'single-elimination', rounds: bracket.winnerBracket },
+      svg,
       container
     );
   };
 
   useEffect(() => {
-    // Delay to ensure DOM elements are rendered
     const timer = setTimeout(() => {
       drawConnectingLines();
     }, 100);
 
-    const handleResize = () => {
-      drawConnectingLines();
-    };
-
-    window.addEventListener('resize', handleResize);
-    
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => clearTimeout(timer);
   }, [tournament]);
 
+  const calculateGameNumber = (roundIndex: number, matchIndex: number): number => {
+    let gameNumber = 1;
+    
+    // Calculate games from previous rounds
+    for (let i = 0; i < roundIndex; i++) {
+      if (tournament.type === 'single-elimination') {
+        const round = (tournament as SingleEliminationBracket).rounds[i];
+        gameNumber += round.matches.length;
+      }
+    }
+    
+    // Add current match index
+    gameNumber += matchIndex;
+    
+    return gameNumber;
+  };
+
   if (tournament.type === 'single-elimination') {
+    const singleTournament = tournament as SingleEliminationBracket;
+    
     return (
-      <div className="bracket-container">
+      <div className="bracket-container" ref={bracketRef}>
         <svg 
           ref={svgRef} 
           className="bracket-connections"
-          style={{ position: 'absolute', pointerEvents: 'none', zIndex: 1 }}
+          style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', zIndex: 1 }}
         />
-        <div ref={bracketRef} className="bracket single-elimination">
-          {tournament.rounds.map((round, index) => (
-            <div 
-              key={round.roundNumber} 
-              className={`round-wrapper ${index === currentRound ? 'current-round' : ''}`}
-            >
-              <RoundComponent 
-                round={{
-                  ...round,
-                  matches: round.matches.map(match => ({
-                    ...match,
-                    // Add data attribute for line drawing
-                  }))
-                }}
-                onMatchClick={onMatchClick}
-                isCurrentRound={index === currentRound}
-              />
+        
+        <div className="bracket single-elimination">
+          {singleTournament.rounds.map((round, roundIndex) => (
+            <div key={roundIndex} className="round-wrapper">
+              <div className={`round ${currentRound === roundIndex + 1 ? 'current-round' : ''}`}>
+                <div className="round-title">
+                  {round.name}
+                </div>
+                <div className="round-matches">
+                  {round.matches.map((match, matchIndex) => (
+                    <MatchComponent
+                      key={match.id}
+                      match={match}
+                      onMatchClick={onMatchClick}
+                      gameNumber={calculateGameNumber(roundIndex, matchIndex)}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           ))}
+          
+          {/* Champion Display */}
+          <div className="champion-wrapper">
+            <div className="champion-round">
+              <div className="round-title">CHAMPION</div>
+              <div className="champion-display">
+                {singleTournament.champion ? (
+                  <div className="champion">
+                    🏆 {singleTournament.champion.name}
+                  </div>
+                ) : (
+                  <div className="champion-placeholder">
+                    TBD
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Double elimination rendering
+  const doubleTournament = tournament as DoubleEliminationBracket;
+  
   return (
-    <div className="bracket-container">
+    <div className="bracket-container" ref={bracketRef}>
       <svg 
         ref={svgRef} 
         className="bracket-connections"
-        style={{ position: 'absolute', pointerEvents: 'none', zIndex: 1 }}
+        style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', zIndex: 1 }}
       />
-      <div ref={bracketRef} className="bracket double-elimination">
+      
+      <div className="bracket double-elimination">
         <div className="winner-bracket">
           <h2>Winner Bracket</h2>
           <div className="bracket-rounds">
-            {tournament.winnerRounds.map((round) => (
-              <RoundComponent 
-                key={round.roundNumber} 
-                round={round} 
-                onMatchClick={onMatchClick}
-              />
+            {doubleTournament.winnerBracket.map((round, roundIndex) => (
+              <div key={roundIndex} className="round-wrapper">
+                <div className="round">
+                  <div className="round-title">
+                    {round.name}
+                  </div>
+                  <div className="round-matches">
+                    {round.matches.map((match, matchIndex) => (
+                      <MatchComponent
+                        key={match.id}
+                        match={match}
+                        onMatchClick={onMatchClick}
+                        gameNumber={calculateGameNumber(roundIndex, matchIndex)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -248,25 +293,37 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
         <div className="loser-bracket">
           <h2>Loser Bracket</h2>
           <div className="bracket-rounds">
-            {tournament.loserRounds.map((round) => (
-              <RoundComponent 
-                key={round.roundNumber} 
-                round={round} 
-                onMatchClick={onMatchClick}
-              />
+            {doubleTournament.loserBracket.map((round, roundIndex) => (
+              <div key={roundIndex} className="round-wrapper">
+                <div className="round">
+                  <div className="round-title">
+                    {round.name}
+                  </div>
+                  <div className="round-matches">
+                    {round.matches.map((match, matchIndex) => (
+                      <MatchComponent
+                        key={match.id}
+                        match={match}
+                        onMatchClick={onMatchClick}
+                        gameNumber={calculateGameNumber(roundIndex, matchIndex)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
         
         <div className="grand-final">
           <h2>Grand Final</h2>
-          <div className="match" data-match-id={tournament.grandFinal.id}>
+          <div className="match" data-match-id={doubleTournament.grandFinal.id}>
             <div className="player">
-              {tournament.grandFinal.player1?.name || 'Winner Bracket Winner'}
+              {doubleTournament.grandFinal.player1?.name || 'Winner Bracket Winner'}
             </div>
             <div className="vs">vs</div>
             <div className="player">
-              {tournament.grandFinal.player2?.name || 'Loser Bracket Winner'}
+              {doubleTournament.grandFinal.player2?.name || 'Loser Bracket Winner'}
             </div>
           </div>
         </div>

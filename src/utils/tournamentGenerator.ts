@@ -17,9 +17,20 @@ export const getNextPowerOfTwo = (num: number): number => {
   return Math.pow(2, Math.ceil(Math.log2(num)));
 };
 
-export const getRoundName = (roundNumber: number, totalRounds: number): string => {
+export const getRoundName = (roundNumber: number, totalRounds: number, totalPlayers: number): string => {
   const roundsFromEnd = totalRounds - roundNumber;
   
+  // For small tournaments, use simpler naming
+  if (totalPlayers <= 8) {
+    switch (roundsFromEnd) {
+      case 0: return 'Final';
+      case 1: return 'Semifinals';
+      case 2: return 'Quarterfinals';
+      default: return `Round ${roundNumber}`;
+    }
+  }
+  
+  // For larger tournaments, use traditional naming
   switch (roundsFromEnd) {
     case 0: return 'Final';
     case 1: return 'Semifinals';
@@ -70,7 +81,7 @@ export const generateSingleEliminationBracket = (playerNames: string[]): SingleE
     rounds.push({
       roundNumber: roundNum,
       matches,
-      name: getRoundName(roundNum, totalRounds)
+      name: getRoundName(roundNum, totalRounds, totalPlayers)
     });
     
     // Next round will have winners from matches + players with byes
@@ -86,39 +97,37 @@ export const generateSingleEliminationBracket = (playerNames: string[]): SingleE
   // Only populate the first round
   if (rounds.length > 0) {
     const firstRound = rounds[0];
-    const playersNeededForMatches = firstRound.matches.length * 2;
     
-    // Fill matches with available players
-    for (let i = 0; i < Math.min(playersNeededForMatches, remainingPlayers.length); i++) {
+    // Fill first round matches with all players
+    for (let i = 0; i < remainingPlayers.length; i += 2) {
       const matchIndex = Math.floor(i / 2);
-      const isPlayer1 = i % 2 === 0;
-      
-      if (firstRound.matches[matchIndex]) {
-        if (isPlayer1) {
-          firstRound.matches[matchIndex].player1 = remainingPlayers[i];
-        } else {
-          firstRound.matches[matchIndex].player2 = remainingPlayers[i];
+      if (matchIndex < firstRound.matches.length) {
+        firstRound.matches[matchIndex].player1 = remainingPlayers[i];
+        if (i + 1 < remainingPlayers.length) {
+          firstRound.matches[matchIndex].player2 = remainingPlayers[i + 1];
         }
       }
     }
     
-    // Handle players with byes (odd number of players) - they advance to the second round
-    const playersWhoFought = Math.min(playersNeededForMatches, remainingPlayers.length);
-    const playersWithByes = remainingPlayers.slice(playersWhoFought);
-    
-    if (rounds.length > 1 && playersWithByes.length > 0) {
-      const secondRound = rounds[1];
+    // Handle odd number of players by giving the last player a bye
+    if (remainingPlayers.length % 2 === 1) {
+      const lastPlayer = remainingPlayers[remainingPlayers.length - 1];
       
-      // Place bye players directly in second round
-      let byePlayerIndex = 0;
-      for (let matchIndex = 0; matchIndex < secondRound.matches.length && byePlayerIndex < playersWithByes.length; matchIndex++) {
-        const match = secondRound.matches[matchIndex];
-        if (!match.player1) {
-          match.player1 = playersWithByes[byePlayerIndex];
-          byePlayerIndex++;
-        } else if (!match.player2 && byePlayerIndex < playersWithByes.length) {
-          match.player2 = playersWithByes[byePlayerIndex];
-          byePlayerIndex++;
+      // Find the last match that doesn't have player2 and give that player a bye to next round
+      const lastMatch = firstRound.matches[firstRound.matches.length - 1];
+      if (lastMatch && !lastMatch.player2) {
+        // This player gets a bye - advance them to the second round
+        if (rounds.length > 1) {
+          const secondRound = rounds[1];
+          for (const match of secondRound.matches) {
+            if (!match.player1) {
+              match.player1 = lastPlayer;
+              break;
+            } else if (!match.player2) {
+              match.player2 = lastPlayer;
+              break;
+            }
+          }
         }
       }
     }
@@ -192,8 +201,8 @@ export const generateDoubleEliminationBracket = (playerNames: string[]): DoubleE
 
   return {
     type: 'double-elimination',
-    winnerRounds,
-    loserRounds,
+    winnerBracket: winnerRounds,
+    loserBracket: loserRounds,
     grandFinal,
     players
   };

@@ -28,12 +28,13 @@ export interface SingleEliminationBracket {
   type: 'single-elimination';
   rounds: Round[];
   players: Player[];
+  champion?: Player;
 }
 
 export interface DoubleEliminationBracket {
   type: 'double-elimination';
-  winnerRounds: Round[];
-  loserRounds: Round[];
+  winnerBracket: Round[];
+  loserBracket: Round[];
   grandFinal: Match;
   players: Player[];
 }

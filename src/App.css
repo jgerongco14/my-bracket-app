@@ -4,19 +4,24 @@ html, body {
   padding: 0;
   overflow-x: auto;
   box-sizing: border-box;
+  background: white;
 }
 
+#root {
+  background: white;
+}
 
 .app {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
   margin: 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: white;
   min-height: 100vh;
   width: 100vw;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  color: #333;
 }
 
 .title {
@@ -25,6 +30,8 @@ html, body {
   color: #2c3e50;
   font-size: 2.5rem;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
 /* Tournament Type Selection */
@@ -35,6 +42,7 @@ html, body {
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
 }
 
 .tournament-type-selector label {
@@ -47,6 +55,502 @@ html, body {
 .tournament-type-selector input[type="radio"] {
   margin-right: 8px;
   transform: scale(1.2);
+}
+
+/* Controls section */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+}
+
+.input-mode-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input-mode-selector button {
+  padding: 0.5rem 1rem;
+  border: 2px solid #ddd;
+  background: white;
+  color: #333;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.input-mode-selector button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.input-mode-selector button:hover {
+  border-color: #007bff;
+}
+
+.single-input, .bulk-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.single-input {
+  flex-direction: row;
+  align-items: center;
+}
+
+.bulk-input textarea {
+  min-height: 120px;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  background: white;
+  color: #333;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.bulk-input textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.bulk-input button {
+  align-self: flex-start;
+}
+
+.controls input {
+  padding: 12px 16px;
+  margin-right: 12px;
+  border: 2px solid #ddd;
+  background: white;
+  color: #333;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 200px;
+  transition: all 0.3s ease;
+}
+
+.controls input:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.controls button {
+  padding: 12px 20px;
+  margin: 0 6px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: #4A90E2;
+  color: white;
+}
+
+.controls button:hover:not(:disabled) {
+  background: #357abd;
+  transform: translateY(-2px);
+}
+
+.controls button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Player list */
+.player-list {
+  margin: 20px 0;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.player-list h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.player-list ul {
+  list-style-type: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.player-list li {
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #333;
+  position: relative;
+}
+
+.player-list .remove-player {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-list .remove-player:hover {
+  background: #c82333;
+}
+
+/* Tournament section */
+.tournament-section {
+  margin-top: 30px;
+}
+
+.tournament-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.current-round-indicator {
+  text-align: center;
+  color: #007bff;
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  font-style: italic;
+}
+
+/* Bracket Container */
+.bracket-container {
+  position: relative;
+  overflow-x: auto;
+  padding: 40px 20px;
+  flex: 1;
+  height: 100%;
+  min-height: 600px;
+  background: white;
+  border-radius: 15px;
+  border: 1px solid #ddd;
+}
+
+.bracket-connections {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Single Elimination Bracket - Force Pyramid Layout */
+.bracket.single-elimination {
+  display: flex !important;
+  gap: 150px !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  min-height: 500px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  padding-top: 60px !important;
+}
+
+/* Round wrapper to ensure equal heights */
+.bracket.single-elimination .round-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 200px !important;
+  height: 500px !important;
+}
+
+.bracket.single-elimination .round {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+.bracket.single-elimination .round-title {
+  background: #333 !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  border-radius: 4px !important;
+  text-align: center !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  margin-bottom: 30px !important;
+  border: 1px solid #333 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+.round.current-round .round-title {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* Traditional bracket spacing - Pyramid Formation */
+.round-matches {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  flex: 1 !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+/* Quarter-Finals - 4 matches evenly spaced */
+.bracket.single-elimination .round:nth-child(1) .round-matches {
+  justify-content: space-around !important;
+  padding-top: 30px !important;
+  gap: 40px !important;
+}
+
+/* Semi-Finals - 2 matches positioned to align with quarter-final pairs */
+.bracket.single-elimination .round:nth-child(2) .round-matches {
+  justify-content: space-around !important;
+  padding-top: 110px !important;
+  gap: 160px !important;
+}
+
+/* Finals - 1 match centered to align with semi-final midpoint */
+.bracket.single-elimination .round:nth-child(3) .round-matches {
+  justify-content: center !important;
+  padding-top: 190px !important;
+}
+
+/* Double Elimination Bracket */
+.bracket.double-elimination {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.winner-bracket, .loser-bracket {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  border: 2px solid #ddd;
+}
+
+.winner-bracket h2, .loser-bracket h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.bracket-rounds {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.grand-final {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.grand-final h2 {
+  color: #856404;
+  margin-bottom: 20px;
+}
+
+/* Match Styling - Traditional Tournament Look */
+.match {
+  background: white;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 0;
+  min-width: 150px;
+  width: 150px;
+  min-height: 60px;
+  cursor: default;
+  position: relative;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.match:hover {
+  border-color: #555;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.match.completed {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.05);
+}
+
+/* Player slots */
+.player {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 12px;
+  text-align: left;
+  color: #333;
+  font-size: 13px;
+  border-bottom: 1px solid #ddd;
+  background: white;
+  font-weight: 500;
+  position: relative;
+}
+
+.player:last-child {
+  border-bottom: none;
+}
+
+.player.winner {
+  background: #28a745;
+  color: white;
+  font-weight: bold;
+  border-color: #28a745;
+}
+
+.player.clickable {
+  cursor: pointer;
+}
+
+.player.clickable:hover {
+  background: #007bff;
+  border-color: #007bff;
+  transform: translateY(-1px);
+}
+
+/* Game numbers */
+.game-number {
+  position: absolute;
+  top: -8px;
+  left: 4px;
+  background: #007bff;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.match.completed .game-number {
+  background: #28a745;
+}
+
+/* Champion Display - Aligned with Finals */
+.champion-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  height: 500px;
+  justify-content: flex-start;
+}
+
+.champion-round {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.champion-round .round-title {
+  background: #333;
+  color: #ffd700;
+  font-size: 0.8rem;
+  border: 1px solid #ffd700;
+  margin-bottom: 30px;
+}
+
+.champion-display {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  padding-top: 190px; /* Align with Finals match */
+}
+
+.champion {
+  background: #ffd700;
+  color: #333;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  border: 2px solid #ffd700;
+}
+
+.champion-placeholder {
+  background: #333;
+  color: #777;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  border: 2px dashed #555;
+}
+
+/* Connection lines */
+.bracket-connections line {
+  stroke: #333;
+  stroke-width: 2;
+}
+
+.bracket-connections path {
+  fill: none;
+  stroke: #333;
+  stroke-width: 2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bracket.single-elimination {
+    gap: 60px;
+  }
+  
+  .round-wrapper {
+    min-width: 150px;
+  }
+  
+  .match {
+    min-width: 120px;
+    width: 120px;
+  }
+  
+  .controls {
+    padding: 1rem;
+  }
+  
+  .controls input {
+    width: 150px;
+  }
 }
 
 /* Controls section */
@@ -272,14 +776,27 @@ html, body {
 /* Single Elimination Bracket */
 .bracket.single-elimination {
   display: flex;
-  gap: 100px;
-  align-items: center;
+  gap: 80px;
+  align-items: flex-start;
   justify-content: center;
-  min-height: 100%;
+  min-height: 600px;
   position: relative;
   z-index: 2;
   padding: 40px 20px;
   overflow-x: auto;
+}
+
+/* Round wrapper to ensure equal heights */
+.round-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  height: 600px; /* Fixed height for all columns */
+}
+
+.round {
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
@@ -336,14 +853,19 @@ html, body {
 }
 
 .round-title {
-  background: #4A90E2;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   color: white;
-  padding: 8px 16px;
+  padding: 12px 20px;
   border-radius: 20px;
-  margin-bottom: 40px;
-  font-size: 0.9rem;
-  font-weight: 600;
   text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+  height: 40px; /* Fixed height for all titles */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
 }
 
@@ -351,49 +873,63 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
   flex: 1;
   width: 100%;
-  min-height: 500px;
-}
-
-/* Traditional bracket spacing - exponential spacing like real tournaments */
-.round:nth-child(1) .round-matches {
-  gap: 40px;
-  justify-content: space-evenly;
-}
-
-.round:nth-child(2) .round-matches {
-  gap: 120px;
-  justify-content: space-evenly;
-}
-
-.round:nth-child(3) .round-matches {
-  gap: 280px;
-  justify-content: space-evenly;
-}
-
-.round:nth-child(4) .round-matches {
-  gap: 400px;
-  justify-content: center;
-}
-
-.round:nth-child(n+5) .round-matches {
-  gap: 500px;
-  justify-content: center;
-}
-
-/* Match Styling - Traditional Tournament Look */
-.match {
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  padding: 0;
-  min-width: 180px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  transition: all 0.2s ease;
   position: relative;
-  overflow: hidden;
+}
+
+/* Connection lines */
+.bracket-connections line {
+  stroke: #333;
+  stroke-width: 2;
+}
+
+.bracket-connections path {
+  fill: none;
+  stroke: #333;
+  stroke-width: 2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bracket.single-elimination {
+    gap: 60px;
+  }
+  
+  .round-wrapper {
+    min-width: 150px;
+  }
+  
+  .match {
+    min-width: 120px;
+    width: 120px;
+  }
+  
+  .controls {
+    padding: 1rem;
+  }
+  
+  .controls input {
+    width: 150px;
+  }
+}
+
+/* Game numbers */
+.game-number {
+  position: absolute;
+  top: -8px;
+  left: 4px;
+  background: #007bff;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.match.completed .game-number {
+  background: #28a745;
 }
 
 .match:hover {
@@ -510,7 +1046,7 @@ html, body {
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
 }
 
-/* Improved text visibility */
+/* Player slots */
 .player {
   min-height: 40px;
   display: flex;
@@ -524,11 +1060,18 @@ html, body {
   color: #333;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
   font-size: 14px;
+  border: 2px solid #dee2e6;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 2px 0;
 }
 
-.match.pending .player {
-  background: linear-gradient(135deg, #ffffff, #f8f9fa);
-  border: 2px solid #dee2e6;
+.player:empty,
+.player:not(:empty):not(.winner):not(.clickable) {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: #6c757d;
+  border-color: #ced4da;
 }
 
 .match.pending .player.clickable:hover {
@@ -615,4 +1158,55 @@ html, body {
     min-width: 120px;
     padding: 10px;
   }
+}
+
+/* Champion Display */
+.champion-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  height: 480px;
+  justify-content: center;
+}
+
+.champion-round {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.champion-round .round-title {
+  background: #333;
+  color: #ffd700;
+  font-size: 0.9rem;
+  border: 1px solid #ffd700;
+}
+
+.champion-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.champion {
+  background: #ffd700;
+  color: #333;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  border: 2px solid #ffd700;
+}
+
+.champion-placeholder {
+  background: #333;
+  color: #777;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  border: 2px dashed #555;
 }
