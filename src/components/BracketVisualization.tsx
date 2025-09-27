@@ -88,7 +88,7 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
             line.setAttribute('x2', toX.toString());
             line.setAttribute('y2', toY.toString());
             line.setAttribute('stroke', '#333');
-            line.setAttribute('stroke-width', '2');
+            line.setAttribute('stroke-width', '1');
             line.setAttribute('opacity', matches[0].winner ? '1' : '0.6');
             
             svg.appendChild(line);
@@ -107,10 +107,10 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
             const from2X = match2Rect.right - containerRect.left;
             const from2Y = match2Rect.top + match2Rect.height / 2 - containerRect.top;
             
-            // Calculate bracket connection points
-            const midX = from1X + (toX - from1X) * 0.6;
+            // Calculate bracket connection points - traditional L-shape
+            const midX = from1X + (toX - from1X) * 0.4;
             
-            // Create traditional bracket lines
+            // Create traditional bracket lines with L-shape
             // Horizontal lines from matches
             const line1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             line1.setAttribute('x1', from1X.toString());
@@ -118,7 +118,7 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
             line1.setAttribute('x2', midX.toString());
             line1.setAttribute('y2', from1Y.toString());
             line1.setAttribute('stroke', '#333');
-            line1.setAttribute('stroke-width', '2');
+            line1.setAttribute('stroke-width', '1');
             line1.setAttribute('opacity', matches[0].winner ? '1' : '0.6');
             
             const line2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -127,7 +127,7 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
             line2.setAttribute('x2', midX.toString());
             line2.setAttribute('y2', from2Y.toString());
             line2.setAttribute('stroke', '#333');
-            line2.setAttribute('stroke-width', '2');
+            line2.setAttribute('stroke-width', '1');
             line2.setAttribute('opacity', matches[1].winner ? '1' : '0.6');
             
             // Vertical connecting line
@@ -137,17 +137,17 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
             verticalLine.setAttribute('x2', midX.toString());
             verticalLine.setAttribute('y2', from2Y.toString());
             verticalLine.setAttribute('stroke', '#333');
-            verticalLine.setAttribute('stroke-width', '2');
+            verticalLine.setAttribute('stroke-width', '1');
             verticalLine.setAttribute('opacity', '1');
             
-            // Final line to next match
+            // Final horizontal line to next match
             const finalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             finalLine.setAttribute('x1', midX.toString());
             finalLine.setAttribute('y1', ((from1Y + from2Y) / 2).toString());
             finalLine.setAttribute('x2', toX.toString());
             finalLine.setAttribute('y2', toY.toString());
             finalLine.setAttribute('stroke', '#333');
-            finalLine.setAttribute('stroke-width', '2');
+            finalLine.setAttribute('stroke-width', '1');
             finalLine.setAttribute('opacity', '1');
             
             svg.appendChild(line1);
@@ -180,6 +180,24 @@ export const BracketVisualization: React.FC<BracketVisualizationProps> = ({
     }, 100);
 
     return () => clearTimeout(timer);
+  }, [tournament]);
+
+  // Recalculate lines on window resize with debouncing
+  useEffect(() => {
+    let resizeTimeout: number;
+    
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        drawConnectingLines();
+      }, 150);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
   }, [tournament]);
 
   const calculateGameNumber = (roundIndex: number, matchIndex: number): number => {

@@ -115,6 +115,12 @@ const App: React.FC = () => {
             }
           }
         }
+        
+        // Check if this is the final match and set champion
+        const isFinalMatch = !targetMatch.nextMatchId;
+        if (isFinalMatch) {
+          updatedTournament.champion = selectedPlayer;
+        }
       }
     }
     

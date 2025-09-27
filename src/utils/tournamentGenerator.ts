@@ -98,7 +98,30 @@ export const generateSingleEliminationBracket = (playerNames: string[]): SingleE
   if (rounds.length > 0) {
     const firstRound = rounds[0];
     
-    // Fill first round matches with all players
+    // Handle odd number of players by giving the last player a bye to next round
+    if (remainingPlayers.length % 2 === 1) {
+      const lastPlayer = remainingPlayers[remainingPlayers.length - 1];
+      
+      // Remove the last player from the current round (they get a bye)
+      remainingPlayers = remainingPlayers.slice(0, -1);
+      
+      // Advance the bye player to the second round
+      if (rounds.length > 1) {
+        const secondRound = rounds[1];
+        // Find the first available slot in the second round
+        for (const match of secondRound.matches) {
+          if (!match.player1) {
+            match.player1 = lastPlayer;
+            break;
+          } else if (!match.player2) {
+            match.player2 = lastPlayer;
+            break;
+          }
+        }
+      }
+    }
+    
+    // Fill first round matches with remaining players (now even number)
     for (let i = 0; i < remainingPlayers.length; i += 2) {
       const matchIndex = Math.floor(i / 2);
       if (matchIndex < firstRound.matches.length) {
@@ -108,35 +131,13 @@ export const generateSingleEliminationBracket = (playerNames: string[]): SingleE
         }
       }
     }
-    
-    // Handle odd number of players by giving the last player a bye
-    if (remainingPlayers.length % 2 === 1) {
-      const lastPlayer = remainingPlayers[remainingPlayers.length - 1];
-      
-      // Find the last match that doesn't have player2 and give that player a bye to next round
-      const lastMatch = firstRound.matches[firstRound.matches.length - 1];
-      if (lastMatch && !lastMatch.player2) {
-        // This player gets a bye - advance them to the second round
-        if (rounds.length > 1) {
-          const secondRound = rounds[1];
-          for (const match of secondRound.matches) {
-            if (!match.player1) {
-              match.player1 = lastPlayer;
-              break;
-            } else if (!match.player2) {
-              match.player2 = lastPlayer;
-              break;
-            }
-          }
-        }
-      }
-    }
   }
 
   return {
     type: 'single-elimination',
     rounds,
-    players
+    players,
+    champion: undefined
   };
 };
 

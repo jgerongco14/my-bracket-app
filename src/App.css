@@ -266,44 +266,50 @@ html, body {
   height: 100%;
 }
 
-/* Single Elimination Bracket - Force Pyramid Layout */
+/* Single Elimination Bracket - Traditional Tournament Layout */
 .bracket.single-elimination {
-  display: flex !important;
-  gap: 150px !important;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  min-height: 500px !important;
-  position: relative !important;
-  z-index: 2 !important;
-  padding-top: 60px !important;
+  display: flex;
+  gap: 120px;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 600px;
+  position: relative;
+  z-index: 2;
+  padding: 40px 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Round wrapper to ensure equal heights */
+/* Round wrapper to ensure proper spacing */
 .bracket.single-elimination .round-wrapper {
-  display: flex !important;
-  flex-direction: column !important;
-  min-width: 200px !important;
-  height: 500px !important;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  height: 600px;
+  position: relative;
 }
 
 .bracket.single-elimination .round {
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
 .bracket.single-elimination .round-title {
-  background: #333 !important;
-  color: white !important;
-  padding: 8px 16px !important;
-  border-radius: 4px !important;
-  text-align: center !important;
-  font-weight: 700 !important;
-  font-size: 0.8rem !important;
-  margin-bottom: 30px !important;
-  border: 1px solid #333 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1px !important;
+  background: #333;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
 }
 
 .round.current-round .round-title {
@@ -314,32 +320,33 @@ html, body {
 
 /* Traditional bracket spacing - Pyramid Formation */
 .round-matches {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  flex: 1 !important;
-  width: 100% !important;
-  position: relative !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  position: relative;
+  justify-content: flex-start;
 }
 
 /* Quarter-Finals - 4 matches evenly spaced */
 .bracket.single-elimination .round:nth-child(1) .round-matches {
-  justify-content: space-around !important;
-  padding-top: 30px !important;
-  gap: 40px !important;
+  justify-content: space-around;
+  padding-top: 20px;
+  gap: 50px;
 }
 
 /* Semi-Finals - 2 matches positioned to align with quarter-final pairs */
 .bracket.single-elimination .round:nth-child(2) .round-matches {
-  justify-content: space-around !important;
-  padding-top: 110px !important;
-  gap: 160px !important;
+  justify-content: space-around;
+  padding-top: 100px;
+  gap: 200px;
 }
 
 /* Finals - 1 match centered to align with semi-final midpoint */
 .bracket.single-elimination .round:nth-child(3) .round-matches {
-  justify-content: center !important;
-  padding-top: 190px !important;
+  justify-content: center;
+  padding-top: 200px;
 }
 
 /* Double Elimination Bracket */
@@ -384,24 +391,24 @@ html, body {
   margin-bottom: 20px;
 }
 
-/* Match Styling - Traditional Tournament Look */
+/* Match Styling - Clean Tournament Look */
 .match {
   background: white;
-  border: 2px solid #333;
+  border: 1px solid #333;
   border-radius: 4px;
   padding: 0;
-  min-width: 150px;
-  width: 150px;
+  min-width: 160px;
+  width: 160px;
   min-height: 60px;
   cursor: default;
   position: relative;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .match:hover {
   border-color: #555;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 .match.completed {
@@ -409,20 +416,21 @@ html, body {
   background: rgba(40, 167, 69, 0.05);
 }
 
-/* Player slots */
+/* Player slots - Clean Design */
 .player {
-  min-height: 28px;
+  min-height: 30px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 12px;
+  padding: 8px 12px;
   text-align: left;
   color: #333;
-  font-size: 13px;
+  font-size: 14px;
   border-bottom: 1px solid #ddd;
   background: white;
   font-weight: 500;
   position: relative;
+  transition: all 0.2s ease;
 }
 
 .player:last-child {
@@ -442,6 +450,7 @@ html, body {
 
 .player.clickable:hover {
   background: #007bff;
+  color: white;
   border-color: #007bff;
   transform: translateY(-1px);
 }
@@ -468,8 +477,8 @@ html, body {
 .champion-wrapper {
   display: flex;
   flex-direction: column;
-  min-width: 160px;
-  height: 500px;
+  min-width: 180px;
+  height: 600px;
   justify-content: flex-start;
 }
 
@@ -482,9 +491,15 @@ html, body {
 .champion-round .round-title {
   background: #333;
   color: #ffd700;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   border: 1px solid #ffd700;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .champion-display {
@@ -492,41 +507,43 @@ html, body {
   justify-content: center;
   align-items: flex-start;
   flex: 1;
-  padding-top: 190px; /* Align with Finals match */
+  padding-top: 200px; /* Align with Finals match */
 }
 
 .champion {
   background: #ffd700;
   color: #333;
   padding: 15px 20px;
-  border-radius: 8px;
-  font-size: 1.2rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
   font-weight: bold;
   text-align: center;
-  border: 2px solid #ffd700;
+  border: 1px solid #ffd700;
+  min-width: 160px;
 }
 
 .champion-placeholder {
-  background: #333;
-  color: #777;
+  background: #f8f9fa;
+  color: #6c757d;
   padding: 15px 20px;
-  border-radius: 8px;
-  font-size: 1.2rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
   font-weight: bold;
   text-align: center;
-  border: 2px dashed #555;
+  border: 1px dashed #dee2e6;
+  min-width: 160px;
 }
 
-/* Connection lines */
+/* Connection lines - Clean and thin */
 .bracket-connections line {
   stroke: #333;
-  stroke-width: 2;
+  stroke-width: 1;
 }
 
 .bracket-connections path {
   fill: none;
   stroke: #333;
-  stroke-width: 2;
+  stroke-width: 1;
 }
 
 /* Responsive */
@@ -869,25 +886,16 @@ html, body {
   white-space: nowrap;
 }
 
-.round-matches {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  width: 100%;
-  position: relative;
-}
-
-/* Connection lines */
+/* Connection lines - Clean and thin */
 .bracket-connections line {
   stroke: #333;
-  stroke-width: 2;
+  stroke-width: 1;
 }
 
 .bracket-connections path {
   fill: none;
   stroke: #333;
-  stroke-width: 2;
+  stroke-width: 1;
 }
 
 /* Responsive */
@@ -1209,4 +1217,76 @@ html, body {
   font-weight: bold;
   text-align: center;
   border: 2px dashed #555;
+}
+
+/* Additional Responsive Design */
+@media (max-width: 1200px) {
+  .bracket.single-elimination {
+    gap: 80px;
+    max-width: 1000px;
+  }
+  
+  .round-wrapper {
+    min-width: 160px;
+  }
+  
+  .match {
+    min-width: 140px;
+    width: 140px;
+  }
+}
+
+@media (max-width: 768px) {
+  .bracket.single-elimination {
+    gap: 40px;
+    padding: 20px 10px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .round-wrapper {
+    min-width: 140px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .match {
+    min-width: 120px;
+    width: 120px;
+  }
+  
+  .champion-wrapper {
+    height: auto;
+    min-height: 200px;
+  }
+  
+  .champion-display {
+    padding-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bracket.single-elimination {
+    gap: 20px;
+    padding: 10px 5px;
+  }
+  
+  .round-wrapper {
+    min-width: 120px;
+  }
+  
+  .match {
+    min-width: 100px;
+    width: 100px;
+  }
+  
+  .round-title {
+    font-size: 0.75rem;
+    padding: 8px 12px;
+  }
+  
+  .player {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
 }
